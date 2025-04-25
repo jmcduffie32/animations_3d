@@ -17,5 +17,5 @@ opt-level = 1
 opt-level = 3
 
 [[bin]]
-name = "animations_3d"
-path = "empty/src/main.rs"
+name = "magic_cube"
+path = "magic_cube/src/main.rs"
