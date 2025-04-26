@@ -15,6 +15,8 @@ use bevy::{
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
 
+use wasm_bindgen::prelude::*;
+
 /// A marker component for our shapes so we can query them separately from the ground plane
 #[derive(Component)]
 struct Shape;
@@ -24,7 +26,8 @@ struct FractalDepth {
     depth: u32,
 }
 
-fn main() {
+#[wasm_bindgen]
+pub fn start() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(PanOrbitCameraPlugin)
@@ -141,4 +144,8 @@ fn ui_fractal_depth(
         Vec3::new(0.0, 0.0, 0.0),
         fractal_depth.depth,
     );
+}
+
+fn main() {
+    start()
 }

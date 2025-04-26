@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>hello-wasm example</title>
+    <style>
+      html, body {
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      canvas {
+        height: 100% !important;
+        width: 100% !important;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import init, { start } from "./pkg/animations_3d.js";
+      init().then(() => {
+        start();
+      });
+    </script>
+  </body>
+</html>
