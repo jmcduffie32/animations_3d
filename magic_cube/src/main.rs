@@ -12,10 +12,13 @@ use bevy::{
     transform::components::Transform,
     DefaultPlugins,
 };
-use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
+use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 use wasm_bindgen::prelude::*;
+
+// const FRACTAL_DEF: [[u32; 3]; 3] = [[1, 0, 2], [0, 2, 1], [2, 1, 0]];
+const FRACTAL_DEF: [[u32; 2]; 2] = [[1, 0], [0, 1]];
 
 /// A marker component for our shapes so we can query them separately from the ground plane
 #[derive(Component)]
@@ -62,77 +65,30 @@ fn spawn_fractal_recursive(
     if n == 0 {
         spawn_cube(commands, meshes, scale, position);
     } else {
-        let new_scale = scale / 3.0;
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(0.0 * scale, 0.0 * scale, 1.0 * scale),
-            n - 1,
-        );
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(1.0 * scale, 0.0 * scale, 0.0 * scale),
-            n - 1,
-        );
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(2.0 * scale, 0.0 * scale, 2.0 * scale),
-            n - 1,
-        );
-
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(0.0 * scale, 1.0 * scale, 0.0 * scale),
-            n - 1,
-        );
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(1.0 * scale, 1.0 * scale, 2.0 * scale),
-            n - 1,
-        );
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(2.0 * scale, 1.0 * scale, 1.0 * scale),
-            n - 1,
-        );
-
-
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(0.0 * scale, 2.0 * scale, 2.0 * scale),
-            n - 1,
-        );
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(1.0 * scale, 2.0 * scale, 1.0 * scale),
-            n - 1,
-        );
-        spawn_fractal_recursive(
-            commands,
-            meshes,
-            new_scale,
-            position + Vec3::new(2.0 * scale, 2.0 * scale, 0.0 * scale),
-            n - 1,
-        );
+        let new_scale = scale / FRACTAL_DEF.len() as f32;
+        for i in 0..FRACTAL_DEF.len() {
+            for j in 0..FRACTAL_DEF[i].len() {
+                spawn_fractal_recursive(
+                    commands,
+                    meshes,
+                    new_scale,
+                    position
+                        + Vec3::new(
+                            i as f32 * new_scale,
+                            j as f32 * new_scale,
+                            FRACTAL_DEF[i][j] as f32 * new_scale,
+                        ),
+                    n - 1,
+                );
+            }
+        }
     }
 }
 
-fn setup(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, fractal_depth: Res<FractalDepth>,
+fn setup(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    fractal_depth: Res<FractalDepth>,
 ) {
     commands.spawn((
         Transform::from_translation(Vec3::new(0.0, 1.5, 5.0)),
@@ -155,7 +111,14 @@ fn setup(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, fractal_depth
         Transform::from_xyz(8.0, 16.0, 8.0),
     ));
 
-    spawn_fractal_recursive(&mut commands, &mut meshes, 3.0, Vec3::new(0.0, 0.0, 0.0), fractal_depth.depth);
+
+    spawn_fractal_recursive(
+        &mut commands,
+        &mut meshes,
+        3.0,
+        Vec3::new(0.0, 0.0, 0.0),
+        fractal_depth.depth,
+    );
 }
 
 fn ui_fractal_depth(
