@@ -62,33 +62,71 @@ fn spawn_fractal_recursive(
     if n == 0 {
         spawn_cube(commands, meshes, scale, position);
     } else {
-        let new_scale = scale / 2.0;
+        let new_scale = scale / 3.0;
         spawn_fractal_recursive(
             commands,
             meshes,
             new_scale,
-            position + Vec3::new(0.0, 0.0, 0.0),
+            position + Vec3::new(0.0 * scale, 0.0 * scale, 1.0 * scale),
             n - 1,
         );
         spawn_fractal_recursive(
             commands,
             meshes,
             new_scale,
-            position + Vec3::new(new_scale, 0.0, new_scale),
+            position + Vec3::new(1.0 * scale, 0.0 * scale, 0.0 * scale),
             n - 1,
         );
         spawn_fractal_recursive(
             commands,
             meshes,
             new_scale,
-            position + Vec3::new(new_scale, new_scale, 0.0),
+            position + Vec3::new(2.0 * scale, 0.0 * scale, 2.0 * scale),
+            n - 1,
+        );
+
+        spawn_fractal_recursive(
+            commands,
+            meshes,
+            new_scale,
+            position + Vec3::new(0.0 * scale, 1.0 * scale, 0.0 * scale),
             n - 1,
         );
         spawn_fractal_recursive(
             commands,
             meshes,
             new_scale,
-            position + Vec3::new(0.0, new_scale, new_scale),
+            position + Vec3::new(1.0 * scale, 1.0 * scale, 2.0 * scale),
+            n - 1,
+        );
+        spawn_fractal_recursive(
+            commands,
+            meshes,
+            new_scale,
+            position + Vec3::new(2.0 * scale, 1.0 * scale, 1.0 * scale),
+            n - 1,
+        );
+
+
+        spawn_fractal_recursive(
+            commands,
+            meshes,
+            new_scale,
+            position + Vec3::new(0.0 * scale, 2.0 * scale, 2.0 * scale),
+            n - 1,
+        );
+        spawn_fractal_recursive(
+            commands,
+            meshes,
+            new_scale,
+            position + Vec3::new(1.0 * scale, 2.0 * scale, 1.0 * scale),
+            n - 1,
+        );
+        spawn_fractal_recursive(
+            commands,
+            meshes,
+            new_scale,
+            position + Vec3::new(2.0 * scale, 2.0 * scale, 0.0 * scale),
             n - 1,
         );
     }
@@ -117,7 +155,7 @@ fn setup(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, fractal_depth
         Transform::from_xyz(8.0, 16.0, 8.0),
     ));
 
-    spawn_fractal_recursive(&mut commands, &mut meshes, 4.0, Vec3::new(0.0, 0.0, 0.0), fractal_depth.depth);
+    spawn_fractal_recursive(&mut commands, &mut meshes, 3.0, Vec3::new(0.0, 0.0, 0.0), fractal_depth.depth);
 }
 
 fn ui_fractal_depth(
